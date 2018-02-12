@@ -101,6 +101,10 @@ didn't exist, we get an empty string.
 Hashing Passwords
 ^^^^^^^^^^^^^^^^^
 
+In order to keep things simple, the following example uses `SHA1` hashing but
+the same principles apply for `PBKDF2`_ and `Bcrypt`_.
+
+
 Seeing the plain-text password is scary, isn't it? No worries, CouchDB doesn't
 show the plain-text password anywhere. It gets hashed right away. The hash
 is that big, ugly, long string that starts out with ``-hashed-``.
@@ -141,9 +145,14 @@ characters ``-hashed-``, but that's pretty unlikely to begin with.
 .. note::
     Since :ref:`1.3.0 release <release/1.3.0>` CouchDB uses ``-pbkdf2-`` prefix
     by default to sign about using `PBKDF2`_ hashing algorithm instead of
-    `SHA1`.
+    `SHA1`. `Bcrypt`_ hashing is also available and uses the ``-bcrypt-`` prefix.
+
+.. note::
+    Since :ref:`2.1.2 release <release/2.1.2>` `Bcrypt`_ hashing is also available
+    and uses the ``-bcrypt-`` prefix.
 
     .. _PBKDF2: http://en.wikipedia.org/wiki/PBKDF2
+    .. _Bcrypt: http://en.wikipedia.org/wiki/Bcrypt
 
 .. _intro/security/basicauth:
 
@@ -285,7 +294,7 @@ several *mandatory* fields, that CouchDB needs for authentication:
 
 - **_id** (*string*): Document ID. Contains user's login with special prefix
   :ref:`org.couchdb.user`
-- **derived_key** (*string*): `PBKDF2`_ key
+- **derived_key** (*string*): `PBKDF2`_ or `Bcrypt`_ key
 - **name** (*string*): User's name aka login. **Immutable** e.g. you cannot
   rename an existing user - you have to create new one
 - **roles** (*array* of *string*): List of user roles. CouchDB doesn't provide
@@ -294,8 +303,8 @@ several *mandatory* fields, that CouchDB needs for authentication:
   administrators may assign roles to users - by default all users have no roles
 - **password_sha** (*string*): Hashed password with salt. Used for ``simple``
   `password_scheme`
-- **password_scheme** (*string*): Password hashing scheme. May be ``simple`` or
-  ``pbkdf2``
+- **password_scheme** (*string*): Password hashing scheme. May be ``simple``,
+  ``pbkdf2`` or ``bcrypt``
 - **salt** (*string*): Hash salt. Used for ``simple`` `password_scheme`
 - **type** (*string*): Document type. Constantly has the value ``user``
 
